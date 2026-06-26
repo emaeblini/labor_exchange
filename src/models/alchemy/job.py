@@ -17,9 +17,9 @@ class Job(Base):
 
     description: Mapped[str] = mapped_column(String, nullable=False)
 
-    salary_from: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    salary_from: Mapped[Decimal] = mapped_column(Numeric(10, 2))
 
-    salary_to: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    salary_to: Mapped[Decimal] = mapped_column(Numeric(10, 2))
 
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
