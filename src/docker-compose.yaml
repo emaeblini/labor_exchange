@@ -1,7 +1,6 @@
-version: '3'
 services:
   test_service.postgres:
-    image: postgres:latest
+    image: postgres:16
     hostname: test_service.postgres
     container_name: test_service.postgres
     ports:
@@ -15,7 +14,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-    - ${APP_PORT}:8000
+    - ${APP_PORT}:8080
     env_file:
     - ./.env
 volumes:
