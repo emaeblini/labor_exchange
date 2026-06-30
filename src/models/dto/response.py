@@ -6,6 +6,9 @@ class ResponseCreateDTO(BaseDTO):
     user_id: int
     message: str
 
+class ResponseUpdateDTO(BaseDTO):
+    message: str | None = None
+
 class ResponseDTO(BaseDTO):
     id: int
     job_id: int
