@@ -1,3 +1,4 @@
+from tools.di_containers.service_container import ServiceContainer
 import fastapi
 from config import app_config as app_config_module
 from fastapi import Request
@@ -18,6 +19,11 @@ app = fastapi.FastAPI(
     redoc_url="/api/v1/redoc",
     redirect_slashes=True,
 )
+
+container = ServiceContainer()
+container.wire(packages=["web.entrypoints"])
+app.container = container
+
 router_registrator.register_routers(app)
 
 app.add_middleware(
@@ -35,12 +41,6 @@ app.add_middleware(logger_middleware.SetRequestContextMiddleware)
 async def object_exists_exception_handler(
     request: Request, exc: Exception
 ) -> PlainTextResponse:  # noqa
-    """
-    Обработать ObjectExistsException
-    :param request: объект запроса
-    :param exc: исключение
-    :return: 400 статус
-    """
 
     return PlainTextResponse(content=str(exc), status_code=400)
 
@@ -49,12 +49,6 @@ async def object_exists_exception_handler(
 async def object_doesnt_exists_exception_handler(
     request: Request, exc: Exception
 ) -> PlainTextResponse:  # noqa
-    """
-    Обработать ObjectDoesntExistsException
-    :param request: объект запроса
-    :param exc: исключение
-    :return: 404 статус
-    """
 
     return PlainTextResponse(content=str(exc), status_code=404)
 
@@ -63,23 +57,11 @@ async def object_doesnt_exists_exception_handler(
 async def no_permission_exception_handler(
     request: Request, exc: Exception
 ) -> PlainTextResponse:  # noqa
-    """
-    Обработать NoPermissionException
-    :param request: объект запроса
-    :param exc: исключение
-    :return: 403 статус
-    """
 
     return PlainTextResponse(content=str(exc), status_code=403)
 
 
 @app.exception_handler(exceptions.SystemLogicError)
 async def logic_exception_handler(request: Request, exc: Exception) -> PlainTextResponse:  # noqa
-    """
-    Обработать SystemLogicError
-    :param request: объект запроса
-    :param exc: исключение
-    :return: 400 статус
-    """
 
     return PlainTextResponse(content=str(exc), status_code=400)
