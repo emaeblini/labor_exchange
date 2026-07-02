@@ -1,19 +1,24 @@
-# thirdparty
-from dependency_injector import containers
+from dependency_injector import containers, providers
 
-# project
-from config import pg_config
-
-config = pg_config.pg_config
+import services
+from tools.di_containers.alchemy_container import AlchemyAsyncContainer
 
 
 class ServiceContainer(containers.DeclarativeContainer):
-    """
-    DI-контейнер с провайдерами для работы с сервисами
-    """
 
-    # Указать связанные модули
-    wiring_config = containers.WiringConfiguration(modules=None)
+    wiring_config = containers.WiringConfiguration(packages=["web.entrypoints"])
 
-    # Добавить провайдеры конкретных реализаций сервисов
-    ...
+    alchemy_container = providers.Container(
+        AlchemyAsyncContainer,
+    )
+
+    job_service = providers.Factory(
+        services.JobService,
+        uow=alchemy_container.job_uow,
+    )
+
+    response_service = providers.Factory(
+        services.ResponseService,
+        response_uow=alchemy_container.response_uow,
+        job_uow=alchemy_container.job_uow,
+    )
